@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TouchPad"
+        xmlns:local="clr-namespace:TouchPad" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="KeyDialog" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Topmost="True">
+        Title="KeyDialog" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Topmost="True" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -17,8 +17,9 @@
                 <ColumnDefinition Width="55"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="85"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="67.111"/>
+                <ColumnDefinition Width="99.111"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="24"/>
@@ -31,51 +32,35 @@
                 <RowDefinition Height="24"/>
                 <RowDefinition Height="24"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="XTextBox" Height="23" Margin="0.889,0,1.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Text="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Width="53" TextAlignment="Center"/>
-            <TextBox x:Name="YTextBox" Height="23" Margin="0.889,0,1.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"  Text="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" Grid.Row="1" Width="53" TextAlignment="Center"/>
-            <TextBox x:Name="WidthTextBox" Height="23" Margin="0.889,0,1.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1"  Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="Width" VerticalAlignment="Top" Grid.Row="2" Width="53" TextAlignment="Center"/>
-            <TextBox x:Name="HeightTextBox" Height="23" Margin="0.889,0,1.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="3" Grid.Column="1"  Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Margin="1" TextWrapping="Wrap" Text="Height" VerticalAlignment="Top" Grid.Row="3" Width="53" TextAlignment="Center"/>
-           <Border Grid.Row="5" Grid.Column="2" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FFFCECD4" BorderBrush="#FF7A7A7A" BorderThickness="1" ></Border>
-            <TextBox x:Name="TextTextBox" Margin="0.778,0,1.222,0" TextWrapping="Wrap" Grid.Column="3"  Text="{Binding Text}" Grid.Row="5"/>
+            <TextBox x:Name="XTextBox" Height="23" Margin="0.889,0,0.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Text="{Binding X, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" TextAlignment="Center" Height="16"/>
+            <TextBox x:Name="YTextBox" Height="23" Margin="0.889,0,0.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"  Text="{Binding Y, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" Grid.Row="1" TextAlignment="Center" Height="16"/>
+            <TextBox x:Name="WidthTextBox" Height="23" Margin="0.889,0,0.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1"  Text="{Binding Width, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="Width" VerticalAlignment="Top" Grid.Row="2" TextAlignment="Center" Height="16"/>
+            <TextBox x:Name="HeightTextBox" Height="23" Margin="0.889,0,0.111,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="3" Grid.Column="1"  Text="{Binding Height, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="Height" VerticalAlignment="Top" Grid.Row="3" TextAlignment="Center" Height="16"/>
+            <Border Grid.Row="5" Grid.Column="1" Grid.RowSpan="4" Grid.ColumnSpan="5" Background="#FFFCECD4" BorderBrush="#FF7A7A7A" BorderThickness="1" Margin="99.889,0,-2.111,0" ></Border>
+            <TextBlock Margin="1,1,1.111,0" TextWrapping="Wrap" Text="Image" VerticalAlignment="Top" TextAlignment="Center" Grid.Row="4" Height="16"/>
+            <TextBox x:Name="ImageTextBox" Height="23" Margin="0.889,0,0.222,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="4"  Text="{Binding Image, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4" IsReadOnly="True"/>
+            <Button x:Name="BrowseButton" Content="Browse..." Grid.Column="5" HorizontalAlignment="Left" Height="23" Margin="3.778,0,-0.111,0" Grid.Row="4" VerticalAlignment="Top" Width="75" Click="BrowseButton_Click"/>
+            <TextBlock Margin="19.889,4,15,4" TextWrapping="Wrap" Text="Text" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="2" Grid.Row="5" Height="16"/>
+            <TextBlock Margin="19.889,4,15,4" TextWrapping="Wrap" Text="Font" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="2" Grid.Row="6" Height="16"/>
+            <ComboBox x:Name="FontFamilyBox" Margin="1.778,0,3,0" Grid.Column="3"  Grid.Row="6" Grid.ColumnSpan="3" SelectionChanged="FontFamilyBox_SelectionChanged"/>
+            <TextBox x:Name="TextTextBox" Margin="0,0,3,0" TextWrapping="Wrap" Grid.Column="3"  Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" AcceptsReturn="True" AcceptsTab="True" Grid.ColumnSpan="3"/>
+            <TextBlock Margin="14.889,4,17,4" TextWrapping="Wrap" Text="Font Size" VerticalAlignment="Center" Width="53" TextAlignment="Center" Grid.Column="2" Grid.Row="7" HorizontalAlignment="Center" Height="16"/>
+            <xctk:ButtonSpinner x:Name="FontSizeSpinner" Margin="0,0,1.111,0"  Grid.Column="3" Grid.Row="7" Spin="FontSizeSpinner_Spin">
+                <TextBox Text="{Binding FontSize}" />
+            </xctk:ButtonSpinner>
 
-            <TextBlock Margin="0.889,1,1.222,0" TextWrapping="Wrap" Text="Text" VerticalAlignment="Center" Width="53" TextAlignment="Center" Grid.Column="2" Grid.Row="5"/>
-            <TextBox x:Name="KeysTextBox" Height="23" Margin="0.778,0,1.222,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="3" Grid.Row="7"  Text="{Binding Action.Data, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox x:Name="CommandTextBox" Height="23" Margin="0.778,0,1.222,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="3" Grid.Row="7"  Text="{Binding Action.Command, UpdateSourceTrigger=PropertyChanged}"/>
-            <ComboBox x:Name="LayoutComboBox" Height="23" Margin="0.778,0,1.222,0"  Grid.Column="3" Grid.Row="7" SelectionChanged="LayoutComboBox_SelectionChanged"/>
-            <ComboBox x:Name="VKeyComboBox" Height="23" Margin="0.778,0,1.222,0"  Grid.Column="3" Grid.Row="7" SelectionChanged="VKeyComboBox_SelectionChanged"/>
-            <Button x:Name="PressButton" Content="Press..." Grid.Column="4" HorizontalAlignment="Left" Height="23" Margin="3,0,0,0" Grid.Row="7" VerticalAlignment="Top" Width="75" KeyDown="PressButton_KeyDown"/>
-
-            <StackPanel x:Name="ControlKeyPanel"  Orientation="Horizontal" Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="3">
-
-                <CheckBox x:Name="AltCheckBox" Margin="3,0,3,0"  VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Alt}">Alt</CheckBox>
-                <CheckBox x:Name="CtrlCheckBox" Margin="3,0,3,0"  VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Ctrl}">Ctrl</CheckBox>
-
-                <CheckBox x:Name="ShiftCheckBox" Margin="3,0,3,0" VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Shift}">Shift</CheckBox>
-                <CheckBox x:Name="WinCheckBox" Margin="3,0,3,0"  VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Win}">Win</CheckBox>
-            </StackPanel>
-            <TextBlock Margin="0.889,1,1.222,0" TextWrapping="Wrap" Text="Action" VerticalAlignment="Center" Width="53" TextAlignment="Center" Grid.Column="2" Grid.Row="6" />
-
-            <ComboBox x:Name="ActionTypeCombo" Grid.Column="3" Margin="1" Grid.Row="6" SelectionChanged="ActionTypeCombo_SelectionChanged" >
-                <ComboBoxItem Content="SendKeys"/>
-                <ComboBoxItem Content="Change Layout"/>
-                <ComboBoxItem Content="Run Command"/>
-                <ComboBoxItem Content="Key Press"/>
-                <ComboBoxItem Content="Key Simulator"/>
-            </ComboBox>
-            <TextBlock x:Name ="ActionTextLabel" Margin="0.889,1,1.222,0" TextWrapping="Wrap" Text="Keys" VerticalAlignment="Center" Width="53" TextAlignment="Center" Grid.Column="2" Grid.Row="7" />
-
-            <TextBox x:Name="ImageTextBox" Height="23" Margin="0.778,0,1.222,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.Row="4"  Text="{Binding Image, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3"/>
-            <Button x:Name="BrowseButton" Content="Browse..." Grid.Column="4" HorizontalAlignment="Left" Height="23" Margin="3,0,0,0" Grid.Row="4" VerticalAlignment="Top" Width="75" Click="BrowseButton_Click"/>
-
-            <TextBlock Margin="0.889,1,1.222,0" TextWrapping="Wrap" Text="Image" VerticalAlignment="Top" Width="53" TextAlignment="Center" Grid.Row="4"/>
-            <Grid x:Name="SampleGrid" HorizontalAlignment="Left" Height="75" Margin="4.889,10,0,-1" VerticalAlignment="Top" Width="75" Grid.Column="1" Grid.Row="5" Grid.RowSpan="4">
-                <Button x:Name="SampleButton" Click="SampleButton_Click" />
+            <TextBlock Margin="0" TextWrapping="Wrap" Text="Font Weight" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="4" Grid.Row="7" HorizontalAlignment="Center"/>
+            <ComboBox x:Name="FontWeightBox" Margin="1.778,0,3,0" Grid.Column="5" Grid.Row="7" SelectionChanged="FontWeightBox_SelectionChanged" Width="100"/>
+            <TextBlock Margin="3,4" TextWrapping="Wrap" Text="Font Color" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="2" Grid.Row="8" Height="16"/>
+            <xctk:ColorPicker x:Name="FontColorButton" Margin="1" Grid.Column="3" Grid.Row="8" SelectedColorChanged="FontColorButton_SelectedColorChanged" />
+            <Grid x:Name="SampleGrid" HorizontalAlignment="Left" Height="85" Margin="4.889,5,0,0" VerticalAlignment="Top" Width="85" Grid.Column="1" Grid.Row="5" Grid.RowSpan="4">
+                <Button x:Name="SampleButton" Click="SampleButton_Click" Margin="5" BorderBrush="{x:Null}" />
             </Grid>
-            <Grid Grid.ColumnSpan="2" Grid.Column="2" Margin="0" Grid.RowSpan="4">
+            <Grid Grid.ColumnSpan="5" Grid.Column="1" Margin="99.889,0,-2.111,0" Grid.RowSpan="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
                     <RowDefinition Height="32"/>
@@ -85,17 +70,45 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="2"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="MoveUpButton" Content="&#x1f845;" Grid.Row="0" Grid.Column="1" Margin="0" Click="MoveUpButton_Click"/>
                 <Button x:Name="MoveLeftButton" Content="&#x1f844;" Grid.Row="1" Grid.Column="0" Margin="0" Click="MoveLeftButton_Click"/>
                 <Button x:Name="MoveRightButton" Content="&#x1f846;" Grid.Row="1" Grid.Column="2" Margin="0" Click="MoveRightButton_Click"/>
                 <Button x:Name="MoveDownButton" Content="&#x1f847;" Grid.Row="2" Grid.Column="1" Margin="0" Click="MoveDownButton_Click"/>
+                <TextBlock x:Name ="ActionTextLabel" Margin="0.889,1,1.222,0" TextWrapping="Wrap" Text="Keys" VerticalAlignment="Center" Width="53" TextAlignment="Center" Grid.Column="4" Grid.Row="1" />
+                <TextBlock Margin="0.889,1,1.222,0" TextWrapping="Wrap" Text="Action" VerticalAlignment="Center" Width="53" TextAlignment="Center" Grid.Column="4" />
+                <ComboBox x:Name="ActionTypeCombo" Grid.Column="5" Margin="1" SelectionChanged="ActionTypeCombo_SelectionChanged" Height="23" >
+                    <ComboBoxItem Content="SendKeys"/>
+                    <ComboBoxItem Content="Change Layout"/>
+                    <ComboBoxItem Content="Run Command"/>
+                    <ComboBoxItem Content="Key Press"/>
+                    <ComboBoxItem Content="Key Simulator"/>
+                </ComboBox>
+                <TextBox x:Name="KeysTextBox" Height="23" Margin="1" TextWrapping="Wrap" Grid.Column="5" Grid.Row="1"  Text="{Binding Action.Data, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="CommandTextBox" Height="23" Margin="1" TextWrapping="Wrap" Grid.Column="5" Grid.Row="1"  Text="{Binding Action.Command, UpdateSourceTrigger=PropertyChanged}"/>
+                <ComboBox x:Name="LayoutComboBox" Height="23" Margin="1"  Grid.Column="5" Grid.Row="1" SelectionChanged="LayoutComboBox_SelectionChanged"/>
+                <ComboBox x:Name="VKeyComboBox" Height="23" Margin="1"  Grid.Column="5" Grid.Row="1" SelectionChanged="VKeyComboBox_SelectionChanged"/>
+                <Button x:Name="PressButton" Content="Press..." Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="3,0,0,0" Grid.Row="1" Width="75" KeyDown="PressButton_KeyDown" PreviewKeyDown="PressButton_PreviewKeyDown"/>
+
+                <StackPanel x:Name="ControlKeyPanel"  Orientation="Horizontal" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="3">
+
+                    <CheckBox x:Name="AltCheckBox" Margin="3,0,3,0"  VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Alt}">Alt</CheckBox>
+                    <CheckBox x:Name="CtrlCheckBox" Margin="3,0,3,0"  VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Ctrl}">Ctrl</CheckBox>
+
+                    <CheckBox x:Name="ShiftCheckBox" Margin="3,0,3,0" VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Shift}">Shift</CheckBox>
+                    <CheckBox x:Name="WinCheckBox" Margin="3,0,3,0"  VerticalAlignment="Center" IsChecked="{Binding Action.Hotkey.Win}">Win</CheckBox>
+                </StackPanel>
+
+
             </Grid>
 
+
         </Grid>
-        <Grid Grid.Row="1" Margin="0,0,0,0" Background="#FFCEEBAD">
+        <Grid Grid.Row="1" Margin="0,0,0,0" Background="#FFADDAEB">
             <Border BorderBrush="#FF989898" BorderThickness="1"></Border>
             <Button x:Name="OKButton" Content="OK" HorizontalAlignment="Right" Margin="0,10,9.556,0" VerticalAlignment="Top" Width="75" Click="OKButton_Click"/>
             <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Right" Margin="0,10,89.556,0" VerticalAlignment="Top" Width="75" Click="CancelButton_Click"/>

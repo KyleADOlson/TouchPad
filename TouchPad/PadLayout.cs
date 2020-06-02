@@ -20,6 +20,9 @@ namespace TouchPad
         private uint color = 0xff000000;
 
         private Guid id = Guid.Empty;
+        private bool reverse;
+
+
 
         private ActiveWindowMatch windowMatch = new ActiveWindowMatch();
 
@@ -174,6 +177,20 @@ namespace TouchPad
                 {
                     windowMatch = value;
                     Notify("WindowMatch");
+                }
+            }
+        }
+
+
+        public bool Reverse
+        {
+            get { return reverse; }
+            set
+            {
+                if (reverse != value)
+                {
+                    reverse = value;
+                    Notify("Reverse");
                 }
             }
         }

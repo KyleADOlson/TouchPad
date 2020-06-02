@@ -78,6 +78,12 @@ namespace TouchPad
         void AddLayoutMenuItems(ContextMenu m)
         {
 
+            MenuItem reversem = new MenuItem();
+            reversem.Header = "Reverse Layout";
+            reversem.IsChecked = layout.Reverse;
+            reversem.Click += Reversem_Click; 
+            m.Items.Add(reversem);
+
             MenuItem showm = new MenuItem();
             showm.Header = "Edit Layout";
             showm.Click += Showm_click; ;
@@ -98,6 +104,12 @@ namespace TouchPad
 
 
 
+        }
+
+        private void Reversem_Click(object sender, RoutedEventArgs e)
+        {
+            layout.Reverse = !layout.Reverse;
+            LayoutGrid();
         }
 
         private void SwitchOpening(MenuItem switchm)
@@ -126,50 +138,18 @@ namespace TouchPad
             }
         }
 
-        void CreatePadLayout()
-        {
-
-
-            layout = new PadLayout();
-            layout.Width = 100;
-            layout.Height = 100;
-            layout.Rows = 4;
-            layout.Columns = 6;
-
-            char c = 'a';
-
-            for ( int i=0; i<3; i++)
-            {
-                for (int j=0; j<2; j++)
-                {
-                    ButtonDescription desc = new ButtonDescription();
-                    desc.X = i;
-                    desc.Y = j;
-                    desc.Text = "[ Control + " + c + " ]";
-                    desc.Action = new PadAction() { Data = "^" + c, ActionType = PadActionType.SendKey };
-                    c++;
-                    layout.Buttons.Add(desc);
-                }
-            }
-
-            layout.Buttons[3].Image = "C:\\Users\\kylea\\Dropbox\\Art\\Stream Deck\\Blue_NoiseANR.png";
-
-            ButtonDescription desc2 = new ButtonDescription();
-            desc2.X = 4;
-            desc2.Y = 0;
-            desc2.Width = 2;
-            desc2.Height = 2;
-            layout.Buttons.Add(desc2);
-        }
 
         (int, int) GetLoc(double x, double y)
         {
-            int col = 0;
-            int row = 0;
 
 
-            col = (int)(x / layout.Width);
-            row = (int)(y / layout.Height);
+            int col = (int)(x / layout.Width);
+            int row = (int)(y / layout.Height);
+
+            if (layout.Reverse)
+            {
+                col = col.ReverseOn(layout.Columns);
+            }
 
             return (col, row);
 
@@ -247,28 +227,26 @@ namespace TouchPad
             {
                 b = new Button();
 
+                int xloc = desc.X;
+
+                if (layout.Reverse)
+                {
+                    xloc = xloc.ReverseOn(layout.Columns);
+                    xloc -= (desc.Width - 1);
+                }
+
+
+
+
                 b.SetValue(Grid.RowProperty, desc.Y);
-                b.SetValue(Grid.ColumnProperty, desc.X);
+                b.SetValue(Grid.ColumnProperty, xloc);
                 b.SetValue(Grid.ColumnSpanProperty, desc.Width);
                 b.SetValue(Grid.RowSpanProperty, desc.Height);
                 b.Tag = desc;
                 b.MouseLeftButtonDown += ButtonMouseLeftDown;
                 b.MouseLeftButtonUp += ButtonMouseLeftUp;
                 b.Click += ButtonClicked;
-                b.FontSize = desc.FontSize;
-                b.Foreground = new SolidColorBrush(desc.FontColor.ToColor());
-                b.FontFamily = new FontFamily(desc.FontFamily);
-                if (desc.Image != null && desc.Image.Length > 0)
-                {
-                    if (File.Exists(desc.Image))
-                    {
-
-                        BitmapImage img = new BitmapImage(new Uri(desc.Image));
-                        b.Background = new ImageBrush(img);
-                    }
-                }
-                
-                b.Content = desc.Text;
+                ButtonStyler.Style(b, desc);
                 
 
                 b.DataContext = desc;
@@ -527,15 +505,17 @@ namespace TouchPad
         private KeyDialog InitKeyDialog(ButtonDescription desc)
         {
             KeyDialog dlg = new KeyDialog( layout, profile, desc, PreviewButton);
+            dlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             dlg.Owner = this;
+            
             return dlg;
         }
 
         private void ShowEditDialog(Button b, ButtonDescription desc)
         {
 
-            KeyDialog dlg = new KeyDialog(layout, profile, new ButtonDescription(desc), PreviewButton);
-            b.Visibility = Visibility.Collapsed;
+            KeyDialog dlg = InitKeyDialog( new ButtonDescription(desc));
+           
             if (dlg.ShowDialog() == true)
             {
                 desc.CopyFrom(dlg.Button);
@@ -589,7 +569,11 @@ namespace TouchPad
             ShowAddKeyDialog();
         }
 
-
+        void SetPositionInProfile()
+        {
+            profile.X = Left;
+            profile.Y = Top;
+        }
 
         private void SaveProfile()
         {
@@ -601,10 +585,6 @@ namespace TouchPad
             XmlLoader<PadProfile>.Save(saveProfile, file, true);
         }
 
-        private void SaveLayout(PadLayout layout, string file)
-        {
-            XmlLoader<PadLayout>.Save(layout, file, true);
-        }
 
 
         private PadProfile LoadProfile(string name = defaultProfile, bool display = true)
@@ -617,9 +597,10 @@ namespace TouchPad
             }
             else if (newProfile == null)
             {
-                LoadLayout("PadLayout.xml");
+                
                 newProfile = new PadProfile() { Name = "Profile" };
-                newProfile.AddLayout(layout);
+                PadLayout pl = new PadLayout() { Name = "Default" };
+                newProfile.AddLayout(pl);
                 profile = newProfile;
                 return newProfile;
             }
@@ -632,7 +613,10 @@ namespace TouchPad
                 
                 profile = newProfile;
                 layout = profile.Current;
+                Left = profile.X;
+                Top = profile.Y;
                 return newProfile;
+                
             }
 
         }
@@ -710,6 +694,11 @@ namespace TouchPad
                 }
             }
         }
-            
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            SetPositionInProfile();
+            SaveProfile();
+        }
     }
 }

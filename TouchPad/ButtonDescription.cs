@@ -5,12 +5,19 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Xml.Serialization;
 
 namespace TouchPad
 {
     public class ButtonDescription : SimpleNotifyClass
     {
+
+        const double DefaultFontSize = 12.0d;
+        const string DefaultFontFamily = "Segoe UI";
+
+
         string text; 
         PadAction action = new PadAction();
         int x;
@@ -22,15 +29,12 @@ namespace TouchPad
         double fontSize = DefaultFontSize;
         string fontFamily = DefaultFontFamily;
         uint fontColor = 0xFF000000;
-
-        const double DefaultFontSize = 12.0d;
-        const string DefaultFontFamily = "Segoe UI";
+        SimpleWeight weight = SimpleWeight.Normal;
 
 
 
         public ButtonDescription()
         {
-
         }
 
         public ButtonDescription(ButtonDescription old)
@@ -51,6 +55,7 @@ namespace TouchPad
             FontSize = old.FontSize;
             FontColor = old.FontColor;
             FontFamily = old.FontFamily;
+            FontWeight = old.FontWeight;
         }
 
 
@@ -217,6 +222,36 @@ namespace TouchPad
                 {
                     fontColor = value;
                     Notify("FontColor");
+                }
+            }
+        }
+
+        public int WeightInt
+        {
+            get
+            {
+                return weight.ToInt();
+            }
+            set
+            {
+                FontWeight = (SimpleWeight)value;
+            }
+        }
+
+        [XmlIgnore]
+        public SimpleWeight FontWeight
+        {
+            get
+            {
+                return weight;
+            }
+            set
+            {
+                if (weight != value)
+                {
+                    weight = value;
+                    Notify("FontWeight");
+                    Notify("WeightInt");
                 }
             }
         }

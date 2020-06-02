@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WindowsInputLib;
 using WindowsInputLib.Native;
+using Xceed.Wpf.Toolkit;
 
 namespace TouchPad
 {
@@ -34,6 +35,10 @@ namespace TouchPad
         PadLayout layout;
         PadProfile profile;
 
+
+        Dictionary<SimpleWeight, ComboBoxItem> fontWeightItems;
+        
+
         public KeyDialog(PadLayout layout, PadProfile profile, ButtonDescription button, ButtonPreviewFunction preview)
         {
             this.layout = layout;
@@ -41,6 +46,10 @@ namespace TouchPad
             this.preview = preview;
 
             InitializeComponent();
+
+
+            SetupFontWeightBox();
+            SetupFontFamilyBox();
 
             Button = button;
 
@@ -87,7 +96,10 @@ namespace TouchPad
                 }
                 ShowPreview();
 
-                UpdateSampleButton(); 
+                UpdateSampleButton();
+                UpdateFontWeightBox();
+                UpdateFontFamilyBox();
+                UpdateFontColorButton();
 
             }
 
@@ -105,8 +117,11 @@ namespace TouchPad
         private void Button_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             ShowPreview();
+            
 
-            if (e.PropertyName == "Image" || e.PropertyName == "Text")
+            if (e.PropertyName == "Image" || e.PropertyName == "Text" 
+                || e.PropertyName == "FontSize" || e.PropertyName == "FontWeight" 
+                || e.PropertyName == "FontFamily" || e.PropertyName == "FontColor")
             {
                 UpdateSampleButton();
             }
@@ -138,7 +153,7 @@ namespace TouchPad
                 {
                     button.Height = 0;
                 }
-            }
+            } 
         }
 
         private void ShowPreview()
@@ -212,30 +227,10 @@ namespace TouchPad
             {
                 backBrush = SampleButton.Background;
             }
+            SampleButton.Background = backBrush;
 
 
-            if (button.Image == null || !File.Exists(button.Image))
-            {
-                SampleButton.Background = backBrush;
-
-            }
-            else
-            {
-
-                BitmapImage img = new BitmapImage(new Uri(button.Image));
-                SampleButton.Background = new ImageBrush(img);
-                
-            }
-
-            if (button.Text == null)
-            {
-                SampleButton.Content = "";
-
-            }
-            else
-            {
-                SampleButton.Content = button.Text;
-            }
+            ButtonStyler.Style(SampleButton, button, true);
         }
 
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
@@ -380,8 +375,14 @@ namespace TouchPad
             button.Action.Hotkey.Key = (VirtualKeyCode)((FrameworkElement)VKeyComboBox.SelectedItem).Tag;
         }
 
+
         private void PressButton_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+
+        }
+        private void PressButton_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+
             var sim = new InputSimulator();
             var state = sim.InputDeviceState;
 
@@ -435,5 +436,112 @@ namespace TouchPad
         {
             ShowImageDialog();
         }
+
+        private void FontSizeSpinner_Spin(object sender, Xceed.Wpf.Toolkit.SpinEventArgs e)
+        {
+            double fs = button.FontSize;
+            double diff = e.Direction == SpinDirection.Increase ? 1.0d : -1.0d;
+            fs += diff;
+            if (fs < 1.0d)
+            {
+                fs = 1.0d;
+            }
+            button.FontSize = fs;
+        }
+
+
+        private void SetupFontWeightBox()
+        {
+            fontWeightItems = new Dictionary<SimpleWeight, ComboBoxItem>();
+
+            var weights = Utils.SimpleWeights;
+
+            foreach (var s in weights)
+            {
+                ComboBoxItem cbi = new ComboBoxItem();
+                cbi.Content = Utils.WeightNames[(int)s];
+                cbi.Tag = s;
+                FontWeightBox.Items.Add(cbi);
+                fontWeightItems[s] = cbi;
+            }
+
+        }
+
+        ComboBoxItem segoeDefault;
+
+        private void SetupFontFamilyBox()
+        {
+            foreach (FontFamily fontFamily in Fonts.SystemFontFamilies)
+            {
+                // FontFamily.Source contains the font family name.
+                ComboBoxItem item = new ComboBoxItem();
+                item.FontFamily = fontFamily;
+                item.Content = fontFamily.Source;
+                item.Tag = fontFamily.Source;
+                if (fontFamily.Source == "Segoe UI")
+                {
+                    segoeDefault = item;
+                }
+                FontFamilyBox.Items.Add(item);
+            }
+
+
+        }
+
+        private void UpdateFontFamilyBox()
+        {
+            ComboBoxItem selectedItem = segoeDefault;
+
+            foreach (ComboBoxItem item in FontFamilyBox.Items)
+            {
+                if (((string)item.Tag) == button.FontFamily)
+                {
+                    selectedItem = item;
+                    
+                }
+
+            }
+
+            FontFamilyBox.SelectedItem = selectedItem;
+        }
+
+
+        private void UpdateFontWeightBox()
+        {
+            if (fontWeightItems != null && button != null)
+            {
+                FontWeightBox.SelectedItem = fontWeightItems[button.FontWeight];
+            }
+        }
+
+        private void FontWeightBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem cbi = (ComboBoxItem)FontWeightBox.SelectedItem;
+            if (cbi != null)
+            {
+                button.FontWeight = (SimpleWeight)cbi.Tag;
+            }
+        }
+
+        private void FontFamilyBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem cbi = (ComboBoxItem)FontFamilyBox.SelectedItem;
+            if (cbi != null)
+            {
+                button.FontFamily = ((string)cbi.Tag);
+            }
+        }
+
+        private void UpdateFontColorButton()
+        {
+            FontColorButton.SelectedColor = button.FontColor.ToColor();
+        }
+
+        private void FontColorButton_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            button.FontColor = FontColorButton.SelectedColor.Value.ToUInt32();
+            
+        }
+
     }
 }
