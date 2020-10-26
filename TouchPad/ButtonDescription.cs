@@ -256,6 +256,11 @@ namespace KyleOlson.TouchPad
             }
         }
 
+        public bool IsPointInside(int cx, int cy)
+        {
+            return (cx.InRange(x, width) && cy.InRange(y, width));
+        }
+
         public override string ToString()
         {
             String res = "Pos[" + x + ", " + y + "] Size[" + width + ", " + height + "]";

@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using StreamDeckSharp;
-
+using OpenMacroBoard.SDK;
+using System.Windows.Input;
+using System.Windows;
 
 namespace KyleOlson.TouchPad.StreamDeck
 {
@@ -41,7 +43,6 @@ namespace KyleOlson.TouchPad.StreamDeck
             get
 
             {
-                IHardware foo;
                 return _Name;
             }
 
@@ -171,7 +172,7 @@ namespace KyleOlson.TouchPad.StreamDeck
 
         private void Board_KeyStateChanged(object sender, OpenMacroBoard.SDK.KeyEventArgs e)
         {
-            KeyStateChanged?.Invoke(this, )
+            KeyStateChanged?.Invoke(this, new KeyStateEventArgs() { Key = e.Key, IsPressed = e.IsDown });
         }
 
         public class KeyStateEventArgs : EventArgs
@@ -185,9 +186,39 @@ namespace KyleOlson.TouchPad.StreamDeck
             public bool IsConnected { get; set; }
         }
 
-        public void SetKeyBitmap(int key, String bitmap)
-        {
+        public int PointToKey(System.Drawing.Point point) => PointToKey(point.X, point.Y);
 
+        public int PointToKey(int x, int y) => x + y * Width;
+
+        System.Drawing.Point KeyToPoint(int key) => new System.Drawing.Point(key % Width, key / Width);
+
+        public void SetKeyBitmap(int x, int y, string path)
+        {
+            SetKeyBitmap(PointToKey(x, y), path);
+        }
+
+        public void SetKeyBitmap(int key, string path)
+        {
+            byte[] data = null;
+            if (path != null)
+            {
+                data = ImageManager.Instance.GetStreamDeckImage(path, KeyWidth, KeyHeight);
+            }
+
+
+            KeyBitmap kb;
+            if (data == null)
+            {
+                kb = KeyBitmap.Black;
+            }
+            else
+            {
+                kb = new KeyBitmap(KeyWidth, KeyHeight, data);
+            }
+
+            Board.SetKeyBitmap(key,kb);
+            
+            
 
         }
     }

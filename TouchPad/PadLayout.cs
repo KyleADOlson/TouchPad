@@ -195,6 +195,12 @@ namespace KyleOlson.TouchPad
             }
         }
 
+        public ButtonDescription ButtonAt(int x, int y)
+        {
+            return buttons.FirstOrDefault(b => b.IsPointInside(x, y));
+
+        }
+
 
     }
 }

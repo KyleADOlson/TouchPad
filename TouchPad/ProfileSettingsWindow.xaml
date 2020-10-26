@@ -10,8 +10,8 @@
         <CheckBox x:Name="UseStreamDeckCheckBox" Content="Use Stream Deck
                   " HorizontalAlignment="Left" Margin="33,25,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="StreamDeckComboBox" HorizontalAlignment="Left" Margin="35,50,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="OKButton" Content="OK" HorizontalAlignment="Left" Margin="325,240,0,0" VerticalAlignment="Top" Width="75" IsDefault="True"/>
-        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="410,240,0,0" VerticalAlignment="Top" Width="75" IsCancel="True"/>
+        <Button x:Name="OKButton" Content="OK" HorizontalAlignment="Left" Margin="325,240,0,0" VerticalAlignment="Top" Width="75" IsDefault="True" Click="OKButton_Click"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="410,240,0,0" VerticalAlignment="Top" Width="75" IsCancel="True" Click="CancelButton_Click"/>
 
     </Grid>
 </Window>

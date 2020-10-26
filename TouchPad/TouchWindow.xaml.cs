@@ -84,7 +84,7 @@ namespace KyleOlson.TouchPad
             MenuItem reversem = new MenuItem();
             reversem.Header = "Reverse Layout";
             reversem.IsChecked = layout.Reverse;
-            reversem.Click += Reversem_Click; 
+            reversem.Click += Reversem_Click;
             m.Items.Add(reversem);
 
             MenuItem showm = new MenuItem();
@@ -181,7 +181,7 @@ namespace KyleOlson.TouchPad
             ButtonGrid.Background = new SolidColorBrush(layout.Color.ToColor());
 
             ButtonGrid.RowDefinitions.Count();
-            for (int i=0; i<layout.Rows; i++)
+            for (int i = 0; i < layout.Rows; i++)
             {
                 if (layout.Width == null)
                 {
@@ -261,7 +261,7 @@ namespace KyleOlson.TouchPad
                 b.MouseLeftButtonUp += ButtonMouseLeftUp;
                 b.Click += ButtonClicked;
                 ButtonStyler.Style(b, desc);
-                
+
 
                 b.DataContext = desc;
                 b.ToolTip = desc.ToString();
@@ -284,7 +284,7 @@ namespace KyleOlson.TouchPad
                 m.Items.Add(dupm);
 
                 m.Items.Add(new Separator());
-                    
+
 
                 var delm = new MenuItem() { Header = "Delete Button" };
                 delm.Click += Delm_Click;
@@ -308,7 +308,7 @@ namespace KyleOlson.TouchPad
 
         }
 
-        
+
 
         private void ButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -364,7 +364,7 @@ namespace KyleOlson.TouchPad
         {
             DeleteButton((ButtonDescription)((FrameworkElement)sender).DataContext);
         }
-        
+
 
         private void Duplicatem_click(object sender, RoutedEventArgs e)
         {
@@ -416,7 +416,7 @@ namespace KyleOlson.TouchPad
         }
 
         private void RunCommand(PadAction action)
-        { 
+        {
             if (action.Command != null)
             {
                 Process.Start(action.Command);
@@ -494,20 +494,20 @@ namespace KyleOlson.TouchPad
             }
         }
 
-            private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
         }
 
         private void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
- 
+
 
         }
 
         private void ShowAddKeyDialog()
         {
             KeyDialog dlg = InitKeyDialog(new ButtonDescription());
-           
+
             dlg.Button.X = concol;
             dlg.Button.Y = conrow;
             if (dlg.ShowDialog() == true)
@@ -518,18 +518,18 @@ namespace KyleOlson.TouchPad
 
         private KeyDialog InitKeyDialog(ButtonDescription desc)
         {
-            KeyDialog dlg = new KeyDialog( layout, profile, desc, PreviewButton);
+            KeyDialog dlg = new KeyDialog(layout, profile, desc, PreviewButton);
             dlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             dlg.Owner = this;
-            
+
             return dlg;
         }
 
         private void ShowEditDialog(Button b, ButtonDescription desc)
         {
 
-            KeyDialog dlg = InitKeyDialog( new ButtonDescription(desc));
-           
+            KeyDialog dlg = InitKeyDialog(new ButtonDescription(desc));
+
             if (dlg.ShowDialog() == true)
             {
                 desc.CopyFrom(dlg.Button);
@@ -545,7 +545,7 @@ namespace KyleOlson.TouchPad
 
         private void ShowDuplicateDialog(ButtonDescription desc)
         {
-            
+
 
             KeyDialog dlg = InitKeyDialog(new ButtonDescription(desc) { ID = Guid.NewGuid() });
             if (dlg.ShowDialog() == true)
@@ -638,8 +638,13 @@ namespace KyleOlson.TouchPad
         {
             PadProfile newProfile = new PadProfile() { Name = "Profile" };
             PadLayout pl = new PadLayout() { Name = "Default" };
+            pl.Width = 100;
+            pl.Height = 100;
+            pl.Rows = 4;
+            pl.Columns = 8;
             newProfile.AddLayout(pl);
             profile = newProfile;
+            layout = profile.Current;
 
             return newProfile;
         }
@@ -714,7 +719,7 @@ namespace KyleOlson.TouchPad
             if (currentPreview != null)
             {
                 ButtonGrid.Children.Remove(currentPreview);
-                currentPreview =null;
+                currentPreview = null;
 
             }
             if (desc != null)
@@ -735,12 +740,12 @@ namespace KyleOlson.TouchPad
 
         private void InitStreamDeck()
         {
-            if (streamDeck != null && ! profile.UseStreamDeck)
+            if (streamDeck != null && !profile.UseStreamDeck)
             {
                 streamDeck = null;
             }
             else if (profile.UseStreamDeck && !profile.StreamdeckSN.IsEmptyOrNull())
-            { 
+            {
                 if (streamDeck != null && streamDeck.SerialNumber != profile.StreamdeckSN)
                 {
                     streamDeck = null;
@@ -751,15 +756,29 @@ namespace KyleOlson.TouchPad
                 {
                     streamDeck = StreamDeckConnector.GetStreamDeck(profile.StreamdeckSN);
                 }
-                
-                if (streamDeck != null)
-                {
-                   
-                    streamDeck.
-                }
+
+                UpdateStreamdeckScreen();
+
 
             }
 
+        }
+
+        private void UpdateStreamdeckScreen()
+        {
+            if (streamDeck != null)
+            {
+                for (int i = 0; i < streamDeck.Width; i++)
+                {
+                    for (int j = 0; j < streamDeck.Height; j++)
+                    {
+                        ButtonDescription bd = profile.Current.ButtonAt(i, j);
+
+                        streamDeck.SetKeyBitmap(i, j, bd?.Image);
+
+                    }
+                }
+            }
         }
     }
 }

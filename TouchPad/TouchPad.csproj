@@ -102,6 +102,7 @@
       <DependentUpon>LayoutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MatchDescription.cs" />
+    <Compile Include="NumberHelper.cs" />
     <Compile Include="PadHotkey.cs" />
     <Compile Include="PadProfile.cs" />
     <Compile Include="ProfileSettingsWindow.xaml.cs">

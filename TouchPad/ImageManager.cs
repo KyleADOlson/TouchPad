@@ -64,7 +64,10 @@ namespace KyleOlson.TouchPad
             }
             return image;
         }
-
+        public byte[] GetStreamDeckImage(string path, int width, int height)
+        {
+            return GetStreamDeckImage(path,  new Size(width,  height));
+        }
         public byte [] GetStreamDeckImage(string path, Size sz)
         {
             if (!streamDeckImages.TryGetValue(sz, out Dictionary<string, byte[]> dictionary))
@@ -80,6 +83,8 @@ namespace KyleOlson.TouchPad
             return sdBytes;
             
         }
+
+
 
         private byte [] CreateStreamDeckImage(string path, Size sz)
         {
@@ -100,13 +105,15 @@ namespace KyleOlson.TouchPad
             Transform tf = new ScaleTransform(xScale, yScale);
             BitmapSource usemap = new TransformedBitmap(img, tf);
 
-            if (usemap.Format != PixelFormats.Bgra32)
+            if (usemap.Format != PixelFormats.Bgr24)
             {
-                usemap = new FormatConvertedBitmap(usemap, PixelFormats.Bgra32, null, 0.0);
+                usemap = new FormatConvertedBitmap(usemap, PixelFormats.Bgr24, null, 0.0);
             }
-            int size = sz.Width * sz.Height * 4;
+            int size = sz.Width * sz.Height * 3;
             byte[] data = new byte[size];
-            usemap.CopyPixels(new System.Windows.Int32Rect(0, 0, sz.Width, sz.Height), data, 4, 0);
+            usemap.CopyPixels(new System.Windows.Int32Rect(0, 0, sz.Width, sz.Height), data, 3 * sz.Width, 0);
+
+            return data;
         }
     }
 }
