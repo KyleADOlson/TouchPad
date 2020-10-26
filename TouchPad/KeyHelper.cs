@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WindowsInputLib;
 using WindowsInputLib.Native;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public static class KeyHelper
     {

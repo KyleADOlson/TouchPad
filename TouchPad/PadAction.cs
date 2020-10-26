@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using WindowsInputLib;
 using WindowsInputLib.Native;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public enum PadActionType
     {

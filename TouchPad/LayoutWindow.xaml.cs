@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     /// <summary>
     /// Interaction logic for LayoutWindow.xaml

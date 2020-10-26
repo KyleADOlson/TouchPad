@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{183E9A6A-BA76-49D7-932D-6B5668AF4C7C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TouchPad</RootNamespace>
-    <AssemblyName>TouchPad</AssemblyName>
+    <RootNamespace>KyleOlson.TouchPad</RootNamespace>
+    <AssemblyName>Touchpad</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,8 +35,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.2.1.0\lib\net35\HidSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenMacroBoard.SDK, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenMacroBoard.SDK.2.0.0\lib\netstandard2.0\OpenMacroBoard.SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="StreamDeckSharp, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamDeckSharp.2.2.0\lib\netstandard2.0\StreamDeckSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.5.1\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,6 +104,11 @@
     <Compile Include="MatchDescription.cs" />
     <Compile Include="PadHotkey.cs" />
     <Compile Include="PadProfile.cs" />
+    <Compile Include="ProfileSettingsWindow.xaml.cs">
+      <DependentUpon>ProfileSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StreamDeck\StreamDeckConnector.cs" />
+    <Compile Include="StreamDeck\StreamDeckDevice.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="XMLLoader.cs" />
@@ -99,6 +117,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LayoutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProfileSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

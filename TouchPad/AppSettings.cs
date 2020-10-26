@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class AppSettings
     {

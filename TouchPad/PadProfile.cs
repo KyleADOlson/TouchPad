@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class PadProfile : SimpleNotifyClass
     {
@@ -18,6 +18,8 @@ namespace TouchPad
         List<Guid> layoutOrder = new List<Guid>();
         Guid defaultLayout = Guid.Empty;
         Guid currentLayout = Guid.Empty;
+        string streamdeckSN = null;
+        bool useStreamDeck = false;
 
         List<LayoutPair> saveLayouts;
 
@@ -294,6 +296,33 @@ namespace TouchPad
                 }
             }
         }
+
+        public bool UseStreamDeck
+        {
+            get => useStreamDeck;
+            set
+            {
+                if (useStreamDeck != value)
+                {
+                    useStreamDeck = value;
+                    Notify("UseStreamDeck");
+                }
+            }
+        }
+
+        public string StreamdeckSN
+        {
+            get => streamdeckSN;
+            set
+            {
+                if (streamdeckSN != value)
+                {
+                    streamdeckSN = value;
+                    Notify("StreamdeckSN");
+                }
+            }
+        }
+
 
         public Guid DefaultLayout
         {

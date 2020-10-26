@@ -36,7 +36,7 @@ using System.Runtime.InteropServices;
 using Android.Content;
 #endif
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
 
     public static class XmlListLoader<T>

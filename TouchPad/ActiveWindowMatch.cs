@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class ActiveWindowMatch : SimpleNotifyClass
     {

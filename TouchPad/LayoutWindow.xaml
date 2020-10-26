@@ -1,9 +1,9 @@
-﻿<Window x:Class="TouchPad.LayoutWindow"
+﻿<Window x:Class="KyleOlson.TouchPad.LayoutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TouchPad"
+        xmlns:local="clr-namespace:KyleOlson.TouchPad"
         mc:Ignorable="d"
         Title="Edit Layout"  ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Grid Background="#FFBACED1">

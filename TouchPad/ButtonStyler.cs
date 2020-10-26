@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public static class ButtonStyler
     {

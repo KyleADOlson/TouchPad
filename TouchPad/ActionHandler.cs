@@ -8,7 +8,7 @@ using System.Windows.Input;
 using WindowsInputLib;
 using WindowsInputLib.Native;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class ActionHandler
     {

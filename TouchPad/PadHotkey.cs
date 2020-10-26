@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using WindowsInputLib;
 using WindowsInputLib.Native;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class PadHotkey : SimpleNotifyClass
     {

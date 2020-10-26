@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public static class StringHelper
     {
@@ -21,6 +21,11 @@ namespace TouchPad
             {
                 return false;
             }
+        }
+
+        public static bool IsEmptyOrNull(this string s)
+        {
+            return s == null || s.Length == 0;
         }
     }
 }

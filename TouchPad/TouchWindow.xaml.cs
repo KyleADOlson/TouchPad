@@ -22,8 +22,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using KyleOlson.TouchPad.StreamDeck;
 
-namespace TouchPad
+
+namespace KyleOlson.TouchPad
 {
     /// <summary>
     /// Interaction logic for TouchWindow.xaml
@@ -43,6 +45,8 @@ namespace TouchPad
 
         ActionHandler actionHandler;
 
+        StreamDeckDevice streamDeck;
+
         public TouchWindow()
         {
 
@@ -54,7 +58,6 @@ namespace TouchPad
             LoadProfile();
 
             LayoutGrid(true);
-
 
         }
 
@@ -102,8 +105,19 @@ namespace TouchPad
             newlayout.Click += Newlayout_click; ;
             m.Items.Add(newlayout);
 
+            MenuItem profileSettings = new MenuItem();
+            profileSettings.Header = "View Settings";
+            profileSettings.Click += ViewSettings_Click;
+            m.Items.Add(profileSettings);
 
 
+
+
+        }
+
+        private void ViewSettings_Click(object sender, RoutedEventArgs e)
+        {
+            ShowProfileSettingsDialog();
         }
 
         private void Reversem_Click(object sender, RoutedEventArgs e)
@@ -256,7 +270,7 @@ namespace TouchPad
 
                 MenuItem deletem = new MenuItem();
 
-                var editm = new MenuItem() { Header = "Edit" };
+                var editm = new MenuItem() { Header = "Edit Button" };
                 editm.Click += (sender, e) =>
                 {
 
@@ -265,14 +279,14 @@ namespace TouchPad
                 };
                 m.Items.Add(editm);
 
-                var dupm = new MenuItem() { Header = "Duplicate" };
+                var dupm = new MenuItem() { Header = "Duplicate Button" };
                 dupm.Click += Duplicatem_click;
                 m.Items.Add(dupm);
 
                 m.Items.Add(new Separator());
                     
 
-                var delm = new MenuItem() { Header = "Delete" };
+                var delm = new MenuItem() { Header = "Delete Button" };
                 delm.Click += Delm_Click;
                 m.Items.Add(delm);
 
@@ -528,6 +542,7 @@ namespace TouchPad
             }
         }
 
+
         private void ShowDuplicateDialog(ButtonDescription desc)
         {
             
@@ -538,6 +553,17 @@ namespace TouchPad
                 AddButton(dlg.Button);
             }
         }
+
+        private void ShowProfileSettingsDialog()
+        {
+            ProfileSettingsWindow dlg = new ProfileSettingsWindow(profile);
+            dlg.Owner = this;
+            if (dlg.ShowDialog() == true)
+            {
+                SaveProfile();
+            }
+        }
+
 
         private void AddButton(ButtonDescription button)
         {
@@ -591,34 +617,40 @@ namespace TouchPad
         {
             PadProfile newProfile = XmlLoader<PadProfile>.Load(name, true);
 
-            if (newProfile == null && !display)
+            if (display)
             {
-                return null;
-            }
-            else if (newProfile == null)
-            {
-                
-                newProfile = new PadProfile() { Name = "Profile" };
-                PadLayout pl = new PadLayout() { Name = "Default" };
-                newProfile.AddLayout(pl);
-                profile = newProfile;
-                return newProfile;
-            }
-            else if (!display)
-            {
-                return newProfile;
-            }
-            else
-            {
-                
-                profile = newProfile;
-                layout = profile.Current;
-                Left = profile.X;
-                Top = profile.Y;
-                return newProfile;
-                
-            }
+                if (newProfile == null)
+                {
+                    newProfile = SetNewProfile();
+                }
+                else
+                {
+                    SetLoadedProfile(newProfile);
+                }
 
+                InitStreamDeck();
+            }
+            return newProfile;
+
+        }
+
+        private PadProfile SetNewProfile()
+        {
+            PadProfile newProfile = new PadProfile() { Name = "Profile" };
+            PadLayout pl = new PadLayout() { Name = "Default" };
+            newProfile.AddLayout(pl);
+            profile = newProfile;
+
+            return newProfile;
+        }
+
+        private void SetLoadedProfile(PadProfile newProfile)
+        {
+
+            profile = newProfile;
+            layout = profile.Current;
+            Left = profile.X;
+            Top = profile.Y;
         }
 
 
@@ -699,6 +731,35 @@ namespace TouchPad
         {
             SetPositionInProfile();
             SaveProfile();
+        }
+
+        private void InitStreamDeck()
+        {
+            if (streamDeck != null && ! profile.UseStreamDeck)
+            {
+                streamDeck = null;
+            }
+            else if (profile.UseStreamDeck && !profile.StreamdeckSN.IsEmptyOrNull())
+            { 
+                if (streamDeck != null && streamDeck.SerialNumber != profile.StreamdeckSN)
+                {
+                    streamDeck = null;
+
+                }
+
+                if (streamDeck == null)
+                {
+                    streamDeck = StreamDeckConnector.GetStreamDeck(profile.StreamdeckSN);
+                }
+                
+                if (streamDeck != null)
+                {
+                   
+                    streamDeck.
+                }
+
+            }
+
         }
     }
 }

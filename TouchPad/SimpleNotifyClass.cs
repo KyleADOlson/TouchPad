@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public abstract class SimpleNotifyClass : INotifyPropertyChanged
     {

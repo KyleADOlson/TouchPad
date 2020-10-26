@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Drawing;
+using System.Windows.Media;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class ImageManager
     {
@@ -15,6 +17,8 @@ namespace TouchPad
 
         private Dictionary<string, BitmapImage> images 
             = new Dictionary<string, BitmapImage>();
+        private Dictionary<Size, Dictionary<string, byte[]>> streamDeckImages
+            = new Dictionary<Size, Dictionary<string, byte[]>>();
 
         private static ImageManager instance;
         public static ImageManager Instance
@@ -59,6 +63,50 @@ namespace TouchPad
                 }
             }
             return image;
+        }
+
+        public byte [] GetStreamDeckImage(string path, Size sz)
+        {
+            if (!streamDeckImages.TryGetValue(sz, out Dictionary<string, byte[]> dictionary))
+            {
+                dictionary = new Dictionary<string, byte[]>();
+                streamDeckImages[sz] = dictionary;
+            }
+
+            if (!dictionary.TryGetValue(path, out byte [] sdBytes))
+            {
+                sdBytes = CreateStreamDeckImage(path, sz);
+            }
+            return sdBytes;
+            
+        }
+
+        private byte [] CreateStreamDeckImage(string path, Size sz)
+        {
+            BitmapImage img = Get(path);
+            if (img == null)
+            {
+                return null;
+            }
+
+            double width = (double)sz.Width;
+            double height = (double)sz.Height;
+
+
+            double xScale = width / img.Width;
+            double yScale = height / img.Height;
+
+
+            Transform tf = new ScaleTransform(xScale, yScale);
+            BitmapSource usemap = new TransformedBitmap(img, tf);
+
+            if (usemap.Format != PixelFormats.Bgra32)
+            {
+                usemap = new FormatConvertedBitmap(usemap, PixelFormats.Bgra32, null, 0.0);
+            }
+            int size = sz.Width * sz.Height * 4;
+            byte[] data = new byte[size];
+            usemap.CopyPixels(new System.Windows.Int32Rect(0, 0, sz.Width, sz.Height), data, 4, 0);
         }
     }
 }

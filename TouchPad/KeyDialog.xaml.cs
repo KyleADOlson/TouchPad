@@ -19,7 +19,7 @@ using WindowsInputLib;
 using WindowsInputLib.Native;
 using Xceed.Wpf.Toolkit;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     /// <summary>
     /// Interaction logic for KeyDialog.xaml

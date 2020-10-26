@@ -1,0 +1,17 @@
+﻿<Window x:Class="KyleOlson.TouchPad.ProfileSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KyleOlson.TouchPad"
+        mc:Ignorable="d"
+        Title="Settings" Height="300" Width="500">
+    <Grid>
+        <CheckBox x:Name="UseStreamDeckCheckBox" Content="Use Stream Deck
+                  " HorizontalAlignment="Left" Margin="33,25,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="StreamDeckComboBox" HorizontalAlignment="Left" Margin="35,50,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="OKButton" Content="OK" HorizontalAlignment="Left" Margin="325,240,0,0" VerticalAlignment="Top" Width="75" IsDefault="True"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="410,240,0,0" VerticalAlignment="Top" Width="75" IsCancel="True"/>
+
+    </Grid>
+</Window>

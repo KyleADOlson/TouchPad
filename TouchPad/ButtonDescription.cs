@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Serialization;
 
-namespace TouchPad
+namespace KyleOlson.TouchPad
 {
     public class ButtonDescription : SimpleNotifyClass
     {
