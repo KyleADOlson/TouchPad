@@ -172,12 +172,14 @@ namespace KyleOlson.TouchPad.StreamDeck
 
         private void Board_KeyStateChanged(object sender, OpenMacroBoard.SDK.KeyEventArgs e)
         {
-            KeyStateChanged?.Invoke(this, new KeyStateEventArgs() { Key = e.Key, IsPressed = e.IsDown });
+            var pt = KeyToPoint(e.Key);
+            KeyStateChanged?.Invoke(this, new KeyStateEventArgs() {X =  pt.X, Y = pt.Y , IsPressed = e.IsDown });
         }
 
         public class KeyStateEventArgs : EventArgs
         {
-            public int Key { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
             public bool IsPressed { get; set; }
         }
 

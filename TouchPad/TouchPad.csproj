@@ -92,6 +92,7 @@
     <Compile Include="ActiveWindowMatch.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="ButtonStyler.cs" />
+    <Compile Include="CountHelper.cs" />
     <Compile Include="ImageManager.cs" />
     <Compile Include="KeyDialog.xaml.cs">
       <DependentUpon>KeyDialog.xaml</DependentUpon>

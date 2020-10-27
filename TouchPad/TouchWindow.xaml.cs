@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using KyleOlson.TouchPad.StreamDeck;
+using IntPt = System.Drawing.Point;
 
 
 namespace KyleOlson.TouchPad
@@ -46,6 +47,9 @@ namespace KyleOlson.TouchPad
         ActionHandler actionHandler;
 
         StreamDeckDevice streamDeck;
+
+
+        CountHelper<IntPt, ButtonDescription> pressedItems = new CountHelper<IntPt, ButtonDescription>();
 
         public TouchWindow()
         {
@@ -327,10 +331,25 @@ namespace KyleOlson.TouchPad
 
         }
 
+
         private void ButtonMouseLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            ButtonDescription desc = (ButtonDescription)((Button)sender).Tag;
+            HandleDescDown(desc);
+            windowPressedItems[new IntPt(desc.X, desc.Y)] = desc;
+
+        }
+        private void ButtonMouseLeftUp(object sender, MouseButtonEventArgs e)
         {
 
             ButtonDescription desc = (ButtonDescription)((Button)sender).Tag;
+             desc = windowPressedItems(new IntPt(desc.X, desc.Y))
+            HandleDescUp(desc);
+           
+        }
+
+        private void HandleDescDown (ButtonDescription desc)
+        {
             switch (desc.Action.ActionType)
             {
                 case PadActionType.KeyPress:
@@ -339,10 +358,9 @@ namespace KyleOlson.TouchPad
                     break;
             }
         }
-        private void ButtonMouseLeftUp(object sender, MouseButtonEventArgs e)
+        
+        private void HandleDescUp(ButtonDescription desc)
         {
-
-            ButtonDescription desc = (ButtonDescription)((Button)sender).Tag;
             switch (desc.Action.ActionType)
             {
                 case PadActionType.KeyPress:
@@ -351,6 +369,9 @@ namespace KyleOlson.TouchPad
                     break;
             }
         }
+
+
+    
 
         private void MainWindow_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -755,13 +776,22 @@ namespace KyleOlson.TouchPad
                 if (streamDeck == null)
                 {
                     streamDeck = StreamDeckConnector.GetStreamDeck(profile.StreamdeckSN);
+                    streamDeck.ConnectionStateChanged += StreamDeck_ConnectionStateChanged;
+                    streamDeck.KeyStateChanged += StreamDeck_KeyStateChanged;
                 }
 
                 UpdateStreamdeckScreen();
-
-
             }
 
+        }
+
+        private void StreamDeck_KeyStateChanged(object sender, StreamDeckDevice.KeyStateEventArgs e)
+        {
+            profile.Current.ButtonAt(e.X, e.Y);
+        }
+
+        private void StreamDeck_ConnectionStateChanged(object sender, StreamDeckDevice.ConnectionStateEventArgs e)
+        {
         }
 
         private void UpdateStreamdeckScreen()
