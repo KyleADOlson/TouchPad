@@ -55,6 +55,22 @@ namespace KyleOlson.TouchPad
             WindowMatch = new ActiveWindowMatch(old.WindowMatch);
         }
 
+        public PadLayout Duplicate(PadProfile profile = null)
+        {
+            PadLayout copy = new PadLayout();
+            if (profile == null)
+            {
+                copy.Name = copy.Name + " Copy";
+            }
+            else
+            {
+
+
+            }
+            copy.ID = Guid.NewGuid();
+            return copy;
+        }
+
         public ObservableCollection<ButtonDescription> Buttons
         {
             get { return buttons; }

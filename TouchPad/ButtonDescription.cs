@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace KyleOlson.TouchPad
 {
-    public class ButtonDescription : SimpleNotifyClass
+    public class ButtonDescription : SimpleNotifyClass, KeyedItem<System.Drawing.Point>
     {
 
         const double DefaultFontSize = 12.0d;
@@ -253,6 +253,24 @@ namespace KyleOlson.TouchPad
                     Notify("FontWeight");
                     Notify("WeightInt");
                 }
+            }
+        }
+
+        [XmlIgnore]
+        public System.Drawing.Point Key
+        {
+            get
+            {
+                return new System.Drawing.Point(x, y);
+            }
+        }
+
+        [XmlIgnore]
+        public System.Drawing.Point Location
+        {
+            get
+            {
+                return new System.Drawing.Point(x, y);
             }
         }
 

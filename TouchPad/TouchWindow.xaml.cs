@@ -61,7 +61,6 @@ namespace KyleOlson.TouchPad
 
             LoadProfile();
 
-            LayoutGrid(true);
 
         }
 
@@ -233,6 +232,9 @@ namespace KyleOlson.TouchPad
             Title = layout.Name ?? "Touch Window";
 
             SetWindowContextMenu();
+
+
+            UpdateStreamDeckDevice();
         }
 
 
@@ -335,20 +337,26 @@ namespace KyleOlson.TouchPad
         private void ButtonMouseLeftDown(object sender, MouseButtonEventArgs e)
         {
             ButtonDescription desc = (ButtonDescription)((Button)sender).Tag;
-            HandleDescDown(desc);
-            windowPressedItems[new IntPt(desc.X, desc.Y)] = desc;
+            
+            if (pressedItems.Add(desc))
+            {
+                HandleKeyDown(desc);
+            }
 
         }
         private void ButtonMouseLeftUp(object sender, MouseButtonEventArgs e)
         {
 
             ButtonDescription desc = (ButtonDescription)((Button)sender).Tag;
-             desc = windowPressedItems(new IntPt(desc.X, desc.Y))
-            HandleDescUp(desc);
-           
+
+            if (pressedItems.Remove(desc))
+            {
+                HandleKeyUp(desc);
+            }
+
         }
 
-        private void HandleDescDown (ButtonDescription desc)
+        private void HandleKeyDown (ButtonDescription desc)
         {
             switch (desc.Action.ActionType)
             {
@@ -359,7 +367,7 @@ namespace KyleOlson.TouchPad
             }
         }
         
-        private void HandleDescUp(ButtonDescription desc)
+        private void HandleKeyUp(ButtonDescription desc)
         {
             switch (desc.Action.ActionType)
             {
@@ -429,7 +437,6 @@ namespace KyleOlson.TouchPad
                 {
                     layout = newlayout;
                     profile.CurrentLayout = layoutid;
-                    LayoutGrid();
                 }
 
             }
@@ -642,20 +649,18 @@ namespace KyleOlson.TouchPad
             {
                 if (newProfile == null)
                 {
-                    newProfile = SetNewProfile();
-                }
-                else
-                {
-                    SetLoadedProfile(newProfile);
+                    newProfile = CreateProfile();
                 }
 
-                InitStreamDeck();
+
+                SetProfile(newProfile);
+
             }
             return newProfile;
 
         }
 
-        private PadProfile SetNewProfile()
+        private PadProfile CreateProfile()
         {
             PadProfile newProfile = new PadProfile() { Name = "Profile" };
             PadLayout pl = new PadLayout() { Name = "Default" };
@@ -664,21 +669,43 @@ namespace KyleOlson.TouchPad
             pl.Rows = 4;
             pl.Columns = 8;
             newProfile.AddLayout(pl);
-            profile = newProfile;
-            layout = profile.Current;
 
             return newProfile;
         }
 
-        private void SetLoadedProfile(PadProfile newProfile)
+        private void SetProfile(PadProfile newProfile)
         {
+            if (profile != null)
+            {
+                profile.PropertyChanged -= Profile_PropertyChanged;
+            }
+
 
             profile = newProfile;
-            layout = profile.Current;
-            Left = profile.X;
-            Top = profile.Y;
+
+            if (profile != null)
+            {
+                profile.PropertyChanged += Profile_PropertyChanged;
+                layout = profile.Current;
+                Left = profile.X;
+                Top = profile.Y;
+                
+            }
+
+
+            LayoutGrid(true);
+
         }
 
+        private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Current")
+            {
+
+                LayoutGrid(true);
+            }
+                
+        }
 
         private bool LoadLayout(string name)
         {
@@ -759,30 +786,50 @@ namespace KyleOlson.TouchPad
             SaveProfile();
         }
 
-        private void InitStreamDeck()
+        private void UpdateStreamDeckDevice()
         {
             if (streamDeck != null && !profile.UseStreamDeck)
             {
-                streamDeck = null;
+                UnsetStreamDeck();
             }
             else if (profile.UseStreamDeck && !profile.StreamdeckSN.IsEmptyOrNull())
             {
                 if (streamDeck != null && streamDeck.SerialNumber != profile.StreamdeckSN)
                 {
-                    streamDeck = null;
+                    UnsetStreamDeck();
 
                 }
 
                 if (streamDeck == null)
                 {
-                    streamDeck = StreamDeckConnector.GetStreamDeck(profile.StreamdeckSN);
-                    streamDeck.ConnectionStateChanged += StreamDeck_ConnectionStateChanged;
-                    streamDeck.KeyStateChanged += StreamDeck_KeyStateChanged;
+                    SetStreamDeck(profile.StreamdeckSN);
                 }
 
                 UpdateStreamdeckScreen();
             }
 
+        }
+
+
+        void UnsetStreamDeck()
+        {
+            if (streamDeck != null)
+            {
+                streamDeck.ConnectionStateChanged -= StreamDeck_ConnectionStateChanged;
+                streamDeck.KeyStateChanged -= StreamDeck_KeyStateChanged;
+                streamDeck = null;
+            }
+        }
+
+        void SetStreamDeck(string sn)
+        {
+
+            streamDeck = StreamDeckConnector.GetStreamDeck(sn);
+            if (streamDeck != null)
+            {
+                streamDeck.ConnectionStateChanged += StreamDeck_ConnectionStateChanged;
+                streamDeck.KeyStateChanged += StreamDeck_KeyStateChanged;
+            }
         }
 
         private void StreamDeck_KeyStateChanged(object sender, StreamDeckDevice.KeyStateEventArgs e)

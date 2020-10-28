@@ -359,6 +359,7 @@ namespace KyleOlson.TouchPad
                 if (currentLayout != value)
                 {
                     currentLayout = value;
+                    Notify("Current");
                     Notify("CurrentLayout");
                 }
             }

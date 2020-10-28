@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,9 @@ namespace KyleOlson.TouchPad
 
         }
 
-        public bool Add(T key, V value)
+        public bool Add(V value)
         {
-            if (items.TryGetValue(key, out CountedItem ci))
+            if (items.TryGetValue(value.Key, out CountedItem ci))
             {
                 ci.Count++;
                 return false;
@@ -26,19 +27,19 @@ namespace KyleOlson.TouchPad
             else
             {
                 ci = new CountedItem(value);
-                items[key] = ci;
+                items[value.Key] = ci;
                 return true;
             }
         }
 
-        public bool Remove(T key)
+        public bool Remove(V value)
         {
-            if (items.TryGetValue(key, out CountedItem ci))
+            if (items.TryGetValue(value.Key, out CountedItem ci))
             {
                 ci.Count--;
                 if (ci.Count <= 0)
                 {
-                    items.Remove(key);
+                    items.Remove(value.Key);
                     return true;
                 }
             }
